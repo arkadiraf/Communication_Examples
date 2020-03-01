@@ -14,6 +14,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WiFiAP.h>
+#include <esp_wifi.h>
 
 #define LED_BUILTIN 10   // Set the GPIO pin where you connected your test LED or comment this line out if your dev board has a built-in LED
 
@@ -31,14 +32,18 @@ IPAddress subnet(255,255,255,0);
 
 void setup() {
   M5.begin();
-  
-  WiFi.mode(WIFI_AP);
-  pinMode(LED_BUILTIN, OUTPUT);
-
   Serial.begin(115200);
   Serial.println();
   Serial.println("Configuring access point...");
-
+  
+  WiFi.mode(WIFI_AP);
+  pinMode(LED_BUILTIN, OUTPUT);
+  int a = esp_wifi_set_protocol( WIFI_IF_STA, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N ); //WIFI_PROTOCOL_LR
+  //int a= esp_wifi_set_protocol(WIFI_IF_STA,WIFI_PROTOCOL_LR); //WIFI_PROTOCOL_LR
+  // a= 0  configured ok :
+  Serial.print("Mode: ");
+  Serial.println(a);
+  
   // You can remove the password parameter if you want the AP to be open.
   WiFi.softAP(ssid, password);
   WiFi.softAPConfig(ip,gateway,subnet);
